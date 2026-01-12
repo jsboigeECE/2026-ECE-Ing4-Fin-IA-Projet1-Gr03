@@ -45,8 +45,38 @@ def mine_adjacent(demineur, taille):
     return demineur
 
 
+def affichage(demineur, taille, mask):
+    for i in range(taille):
+        for k in range(taille*4):
+            print("_", end='')
+            if k == taille*4 - 1:
+                print("_", end='\n')
+
+        for j in range(taille):
+            if mask[i][j]:
+                print("#", end=' | ')
+            else:
+                print(demineur[i][j], end=' | ')
+            if j == taille-1:
+                print("", end='\n')
+
+    print()
+    print()
+
+def jeu(demineur, mask, x, y):
+    if demineur[x][y] == 9:
+        print("Perdu")
+    mask[x][y] = 0
 
 demineur = creation_demineur(10, 7)
 print(demineur)
 demineur = mine_adjacent(demineur, 10)
 print(demineur)
+
+mask = np.ones(demineur.shape, dtype=int)
+
+affichage(demineur, 10, mask)
+
+jeu(demineur, mask, 3, 3)
+
+affichage(demineur, 10, mask)
