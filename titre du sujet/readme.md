@@ -2,10 +2,4 @@
 
 # Farhan et Ilhan
 
-Yo la team
 
-sqfdjkljqs
-
-
-
-dsq
