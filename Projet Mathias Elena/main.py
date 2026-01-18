@@ -44,9 +44,12 @@ def main():
     mdp = InvestmentMDP(market_cfg, invest_cfg)
     sim_engine = SimulationEngine(mdp)
     
-    output_dir = os.path.join(os.path.dirname(__file__), "output")
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    # Définition du dossier de base
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    # Chemin du dossier output
+    output_dir = os.path.join(project_dir, "output")
+    # Création sécurisée du dossier
+    os.makedirs(output_dir, exist_ok=True)
         
     # 3. Benchmarks
     all_results = []

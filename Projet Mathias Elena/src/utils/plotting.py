@@ -139,3 +139,79 @@ def plot_results_professional(all_results_df: pd.DataFrame, horizon: int,
                                 life_events=life_events, event_names=event_names)
         
     plot_wealth_distribution(all_results_df, horizon, f"{output_dir}/comparison_distribution.png")
+
+def plot_risk_reward_comparison(all_results_df: pd.DataFrame, horizon: int,
+                                  save_path: str = None, title: str = "Frontière Efficiente : Risque vs Rendement"):
+    """
+    Affiche un nuage de points Risque vs Rendement pour comparer les solveurs.
+    
+    Axe X : Écart-type de la richesse finale (Risque)
+    Axe Y : Richesse finale moyenne (Rendement)
+    Chaque point représente un solveur.
+    """
+    setup_style()
+    plt.figure(figsize=(12, 8))
+    
+    # Calcul des statistiques par solveur
+    final_wealth = all_results_df[all_results_df['time'] == horizon]
+    
+    stats = []
+    for solver_name in final_wealth['solver'].unique():
+        solver_data = final_wealth[final_wealth['solver'] == solver_name]['wealth']
+        mean_wealth = solver_data.mean()
+        std_wealth = solver_data.std()
+        stats.append({
+            'solver': solver_name,
+            'mean': mean_wealth,
+            'std': std_wealth
+        })
+    
+    stats_df = pd.DataFrame(stats)
+    
+    # Couleurs pour chaque solveur
+    solver_colors = {
+        'DP': '#1f77b4',      # Bleu
+        'OR-Tools': '#2ca02c', # Vert
+        'RL': '#ff7f0e'       # Orange
+    }
+    
+    # Tracer les points
+    for _, row in stats_df.iterrows():
+        color = solver_colors.get(row['solver'], '#333333')
+        plt.scatter(row['std'], row['mean'],
+                   s=300, c=color, alpha=0.7, edgecolors='black', linewidth=2,
+                   label=row['solver'])
+        
+        # Ajouter le nom du solveur au-dessus du point
+        plt.annotate(row['solver'],
+                    (row['std'], row['mean']),
+                    xytext=(0, 10), textcoords='offset points',
+                    ha='center', va='bottom', fontsize=12, fontweight='bold')
+    
+    # Ajouter une ligne de référence (frontière efficiente théorique)
+    # On trace une courbe de tendance pour visualiser la relation risque-rendement
+    if len(stats_df) > 1:
+        sorted_df = stats_df.sort_values('std')
+        plt.plot(sorted_df['std'], sorted_df['mean'],
+                'k--', alpha=0.3, linewidth=1, label='Tendance')
+    
+    plt.title(title, pad=20)
+    plt.xlabel("Écart-type de la Richesse Finale (k€) - Risque", fontsize=14)
+    plt.ylabel("Richesse Finale Moyenne (k€) - Rendement", fontsize=14)
+    plt.grid(True, alpha=0.3)
+    plt.legend(loc='best', frameon=True, fontsize=12)
+    
+    # Ajuster les limites pour mieux visualiser
+    x_min = stats_df['std'].min() * 0.9
+    x_max = stats_df['std'].max() * 1.1
+    y_min = stats_df['mean'].min() * 0.9
+    y_max = stats_df['mean'].max() * 1.1
+    plt.xlim(x_min, x_max)
+    plt.ylim(y_min, y_max)
+    
+    plt.tight_layout()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300)
+        print(f"Graphique sauvegardé dans : {save_path}")
+    plt.close()

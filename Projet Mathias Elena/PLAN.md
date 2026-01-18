@@ -69,6 +69,9 @@ Ce document détaille la stratégie de conception et d'implémentation pour le p
    - Richesse finale moyenne.
    - Ratio de Sharpe / Drawdown maximum.
 2. Génération des graphiques de frontières efficientes et de trajectoires.
+   
+3. En détail : Il s'agit de tester vos trois solveurs (dp_solver.py, ortools_solver.py, rl_solver.py) dans des conditions de marché dégradées (inflation imprévue, krach boursier).
+À quoi ça sert : En programmation dynamique et RL, un modèle peut être excellent en situation "normale" mais s'effondrer à la moindre crise. Cette étape prouve la fiabilité réelle du conseil en investissement.
 
 ## 4. Considérations Techniques
 - Utilisation de `numba` ou `numpy` vectorisé pour accélérer la DP.
