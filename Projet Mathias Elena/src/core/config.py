@@ -36,38 +36,53 @@ class MarketConfig:
 @dataclass
 class InvestmentConfig:
     """Configuration des paramètres d'investissement."""
-    initial_wealth: float = 100.0
-    horizon: int = 20  # Nombre d'années (T)
+    initial_wealth: float = 200.0  # 200k €
+    horizon: int = 30
     rebalancing_frequency: str = "annual"
+    inflation_rate: float = 0.02
+    target_wealth: float = 600.0  # Objectif de richesse nominale
     
     # Événements de vie : {année: montant_sortie}
     life_events: Dict[int, float] = field(default_factory=lambda: {
-        5: 20.0,   # Ex: Achat immobilier partiel ou études
-        10: 30.0   # Autre sortie majeure
+        5: 15.0,    # Achat voiture
+        12: 60.0,   # Apport Immobilier
+        20: 10.0,   # Études enfant an 1
+        21: 10.0,   # Études enfant an 2
+        22: 10.0    # Études enfant an 3
     })
     
+    # Noms des événements pour les annotations
+    event_names: Dict[int, str] = field(default_factory=lambda: {
+        5: "Voiture",
+        12: "Apport Immo",
+        20: "Études",
+        21: "Études",
+        22: "Études"
+    })
+    
+    # Contraintes de liquidité et pénalités
+    illiquid_assets: List[str] = field(default_factory=lambda: ["SCPI"])
+    fire_sale_penalty: float = 0.15  # 15% de pénalité si vente forcée d'actifs illiquides
+    
     # Paramètres de la fonction d'utilité (CRRA)
-    risk_aversion: float = 2.0  # Gamma
+    risk_aversion: float = 2.0
     
     # Frais de transaction spécifiques par actif
-    # {actif: (frais_achat, frais_vente)}
     asset_fees: Dict[str, tuple] = field(default_factory=lambda: {
         "Actions": (0.001, 0.001),
         "Obligations": (0.0005, 0.0005),
         "Cash": (0.0, 0.0),
         "Or": (0.002, 0.002),
         "Crypto": (0.005, 0.005),
-        "SCPI": (0.10, 0.05) # 10% entrée, 5% sortie (simplifié)
+        "SCPI": (0.10, 0.05)
     })
 
 @dataclass
 class SolverConfig:
     """Configuration des paramètres des solveurs."""
-    # DP
-    wealth_grid_size: int = 100
+    wealth_grid_size: int = 50
     min_wealth: float = 0.0
-    max_wealth: float = 500.0
+    max_wealth: float = 1200.0
     
-    # RL
     total_timesteps: int = 100000
     learning_rate: float = 3e-4

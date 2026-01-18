@@ -37,15 +37,16 @@ def benchmark_solver(name, solver, mdp, sim_engine, n_trajs=200):
 def main():
     # 1. Configuration
     market_cfg = MarketConfig()
-    invest_cfg = InvestmentConfig(horizon=10)
-    solver_cfg = SolverConfig(wealth_grid_size=30, total_timesteps=20000)
+    invest_cfg = InvestmentConfig()
+    solver_cfg = SolverConfig()
     
     # 2. Initialisation du MDP
     mdp = InvestmentMDP(market_cfg, invest_cfg)
     sim_engine = SimulationEngine(mdp)
     
-    if not os.path.exists("output"):
-        os.makedirs("output")
+    output_dir = os.path.join(os.path.dirname(__file__), "output")
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
         
     # 3. Benchmarks
     all_results = []
@@ -56,8 +57,6 @@ def main():
     
     if TORCH_AVAILABLE:
         solvers.append(("RL", RLSolver(mdp, solver_cfg)))
-    else:
-        print("Note : Le solveur RL sera ignoré car PyTorch n'est pas opérationnel sur ce système.")
     
     summary_data = []
     for name, solver in solvers:
@@ -73,18 +72,21 @@ def main():
     # 4. Comparaison globale et Graphiques Professionnels
     print("\n--- Génération des graphiques professionnels ---")
     comparison_df = pd.concat(all_results)
-    plot_results_professional(comparison_df, mdp.i_cfg.horizon)
+    plot_results_professional(
+        comparison_df, 
+        mdp.i_cfg.horizon, 
+        output_dir=output_dir,
+        target_wealth=mdp.i_cfg.target_wealth,
+        inflation_rate=mdp.i_cfg.inflation_rate,
+        life_events=mdp.i_cfg.life_events,
+        event_names=mdp.i_cfg.event_names
+    )
     
-    # Sauvegarde des données pour analyse ultérieure
-    comparison_df.to_csv("output/comparison_results.csv", index=False)
-    
-    # Affichage du tableau récapitulatif
+    comparison_df.to_csv(os.path.join(output_dir, "comparison_results.csv"), index=False)
     summary_df = pd.DataFrame(summary_data)
-    print("\n--- Tableau Récapitulatif ---")
-    print(summary_df.to_string(index=False))
-    summary_df.to_csv("output/summary.csv", index=False)
+    summary_df.to_csv(os.path.join(output_dir, "summary.csv"), index=False)
     
-    print("\nTerminé. Tous les résultats sont dans le dossier 'output/'.")
+    print(f"\nTerminé. Tous les résultats sont dans le dossier '{output_dir}'.")
 
 if __name__ == "__main__":
     main()

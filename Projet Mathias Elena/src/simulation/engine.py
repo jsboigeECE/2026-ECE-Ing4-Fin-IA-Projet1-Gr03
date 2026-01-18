@@ -33,13 +33,12 @@ class SimulationEngine:
                 # Générer un rendement aléatoire pour cette étape
                 returns_sample = self.mdp.generate_returns_sample(1)[0]
                 
-                # Transition avec frais de transaction
+                # Transition avec frais de transaction et pénalités
                 wealth = self.mdp.transition(wealth, t, weights, returns_sample, previous_weights)
                 wealth_history.append(wealth)
                 previous_weights = weights
                 
                 if wealth <= 0:
-                    # Faillite : on remplit le reste avec 0
                     for _ in range(t + 1, T):
                         wealth_history.append(0.0)
                         allocation_history.append(np.zeros_like(weights))
@@ -47,15 +46,27 @@ class SimulationEngine:
             
             # Stockage des résultats de la trajectoire
             for t, (w, a) in enumerate(zip(wealth_history, allocation_history + [np.nan])):
+                inflation_factor = (1 + self.mdp.i_cfg.inflation_rate) ** t
+                wealth_real = w / inflation_factor
+                
                 res_dict = {
                     "trajectory": i,
                     "time": t,
-                    "wealth": w
+                    "wealth": w,
+                    "wealth_real": wealth_real
                 }
+                
                 if isinstance(a, np.ndarray):
+                    # Calcul de la liquidité (Cash + Obligations)
+                    cash_idx = self.mdp.m_cfg.assets.index("Cash")
+                    bond_idx = self.mdp.m_cfg.assets.index("Obligations")
+                    liquidity = w * (a[cash_idx] + a[bond_idx])
+                    res_dict["liquidity"] = liquidity
+                    
                     for j, asset in enumerate(self.mdp.m_cfg.assets):
                         res_dict[f"alloc_{asset.lower()}"] = a[j]
                 else:
+                    res_dict["liquidity"] = 0.0
                     for asset in self.mdp.m_cfg.assets:
                         res_dict[f"alloc_{asset.lower()}"] = np.nan
                 results.append(res_dict)
@@ -63,7 +74,6 @@ class SimulationEngine:
         return pd.DataFrame(results)
 
     def calculate_statistics(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Calcule des statistiques agrégées par période."""
         stats = df.groupby("time")["wealth"].agg([
             "mean", "std", "min", "max",
             lambda x: np.percentile(x, 5),
