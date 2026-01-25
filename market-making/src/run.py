@@ -22,6 +22,8 @@ def backtest(strategy, p: Parametres):
 
     pnls = np.array(pnls, dtype=float)
     inventories = np.array(inventories, dtype=int)
+    inv_abs_mean = float(np.mean(np.abs(inventories)))
+    time_at_bound = float(np.mean(np.abs(inventories) == p.q_max))
 
     metrics = {
         "PnL_final": float(pnls[-1]),
@@ -29,6 +31,9 @@ def backtest(strategy, p: Parametres):
         "PnL_volatilite": float(pnls.std()),
         "inventaire_max_abs": int(np.max(np.abs(inventories))),
         "nb_executions": int(execs),
+        "inventaire_abs_moyen": inv_abs_mean,
+        "ratio_temps_a_la_borne": time_at_bound,
+
     }
     return metrics
 
