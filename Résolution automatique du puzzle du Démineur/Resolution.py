@@ -48,7 +48,6 @@ def bordure(plat, taille):
                         if not case_decouverte(plat, i + 1, j + 1):
                             plat[i+1][j+1] = -2
 
-    print(plat)
     return plat
 
 def liste_bordure(plat):

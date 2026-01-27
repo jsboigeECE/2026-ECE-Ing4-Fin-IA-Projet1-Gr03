@@ -1,5 +1,6 @@
 """import Demineur as d
 import numpy as np
+import Resolution as r
 
 
 def choix_chiffre(max_val, coo):
@@ -30,11 +31,12 @@ d.jeu(demineur, mask, taille, x, y)
 d.affichage(demineur, taille, mask)
 
 while d.fin_jeu(demineur, mask, taille, bombes):
-    y = choix_chiffre(taille, "x")
-    x = choix_chiffre(taille, "y")
+    x, y = r.Resolution(demineur, mask, taille, bombes)
 
     d.jeu(demineur, mask, taille, x, y)
-    d.affichage(demineur, taille, mask)"""
+    d.affichage(demineur, taille, mask)
+
+"""
 
 import numpy as np
 import Demineur as d
