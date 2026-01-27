@@ -1,6 +1,7 @@
-# 50. Optimisation d'exécution d'ordres par contraintes (TWAP/VWAP)
-# Ilhan Taskin
-# Farhan Morisson
+# Sujet : 50. Optimisation d'exécution d'ordres par contraintes (TWAP/VWAP)
+# Membres :
+Ilhan Taskin  Farhan Morisson
+ING4 Groupe 3
 
 Description du problème et contexte L'exécution optimale de gros ordres boursiers nécessite de découper les transactions en sous-ordres pour minimiser l'impact sur le marché. Les stratégies TWAP (Time-Weighted Average Price) et VWAP (Volume-Weighted Average Price) se formulent comme des problèmes d'optimisation sous contraintes (volume, timing, coût d'impact) où la programmation par contraintes permet d'intégrer des règles de trading complexes.
 
