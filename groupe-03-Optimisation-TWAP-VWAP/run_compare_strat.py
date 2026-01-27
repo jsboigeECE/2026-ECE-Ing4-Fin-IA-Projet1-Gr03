@@ -24,14 +24,16 @@ def vwap_target(Q, volumes):
 
 
 def main():
-    Q = 200
+#--------------------------------------------------------------
+    ##PARAMETRES
+    Q = 300
     volumes = [10, 40, 200, 100, 100]
     N = len(volumes)
 
     # Contraintes communes (pour comparaison "fair")
     participation_rate = 1.0  # mets 0.5 si tu veux des caps plus stricts
     max_per_slice = None
-
+#------------------------------------------------------------------------
     # Baselines
     twap = twap_schedule(Q=Q, N=N, max_per_slice=max_per_slice).slices
     vwap = vwap_schedule(Q=Q, volumes=volumes, participation_rate=participation_rate, max_per_slice=max_per_slice).slices
@@ -54,19 +56,21 @@ def main():
     ).slices
 
     target = vwap_target(Q, volumes)
-
+    print("\n--------------------------------------------------------------------------")
+    print("Running Comparaison des 3 strategies:")
     print("Q =", Q)
     print("volumes =", volumes)
     print("VWAP target (rounded) =", target)
     print()
-
+    
     rows = [
         ("TWAP", twap),
         ("VWAP", vwap),
         ("OPT impact-only", opt_impact_only),
         ("OPT impact+track", opt_track),
+       
     ]
-
+    
     for name, x in rows:
         print(f"{name:16} -> {x}  | sum={sum(x)}  impact={impact_cost(x)}  track={tracking_cost(x, target)}")
 
