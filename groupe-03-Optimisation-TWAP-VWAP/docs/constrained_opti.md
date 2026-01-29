@@ -18,9 +18,9 @@ $$
 
 ## Données
 
-- \(Q\) : volume total à exécuter  
-- \(V_t\) : volume de marché observé à l’instant \(t\)  
-- \(\alpha\) : taux de participation maximal autorisé  
+- $Q$ : volume total à exécuter  
+- $V_t$ : volume de marché observé à l’instant \(t\)  
+- $\alpha$ : taux de participation maximal autorisé  
 
 > Ces données définissent la quantité totale à exécuter, la liquidité disponible à chaque tranche, et la limite de participation par tranche.
 
