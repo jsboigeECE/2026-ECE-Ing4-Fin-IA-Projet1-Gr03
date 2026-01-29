@@ -47,7 +47,7 @@ $$
 x_t \leq \alpha \cdot V_t
 $$
 
-avec \alpha le taux de participation.
+avec alpha le taux de participation.
 
 **Avantages**
 

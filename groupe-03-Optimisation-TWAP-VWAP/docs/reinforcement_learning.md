@@ -1,40 +1,59 @@
-# Reinforcement Learning
+Reinforcement Learning
 
-L’apprentissage par renforcement permet de modéliser l’exécution d’un ordre comme un processus décisionnel séquentiel.  
-Un agent interagit avec un environnement de marché simulé et apprend progressivement une politique d’exécution optimale.
+L’apprentissage par renforcement (RL) permet de modéliser l’exécution d’un ordre comme un processus décisionnel séquentiel, où chaque décision influence l’évolution future du portefeuille et le coût d’exécution.
+Un agent interagit avec un environnement de marché simulé, observe l’état du marché et le volume restant, et apprend progressivement une politique d’exécution optimale.
+Cette approche est particulièrement utile lorsqu’on ne connaît pas à l’avance le profil de liquidité global, contrairement aux méthodes d’optimisation sous contraintes.
 
-Contrairement à l’optimisation sous contraintes, cette approche ne nécessite pas de connaître à l’avance le profil de liquidité global.
+Environnement
 
-## Environnement
+Le temps est discret et découpé en N tranches temporelles.
+À chaque instant $t$, l’agent choisit une quantité $a_t$ à exécuter, tout en respectant les contraintes de liquidité du marché et le volume restant à trader.
 
-Le temps est discrétisé en N tranches.  
-À chaque instant t, l’agent choisit un volume à exécuter sous contrainte de liquidité.
+État
 
-## État
+L’état de l’agent à l’instant $t$ est défini par :
 
-s_t = (t, q_remaining)
+$$
+s_t = (t, q_{remaining})
+$$
+	•	$t$ : indice de la tranche temporelle
+	•	$q_{remaining}$ : volume restant à exécuter
 
-t : indice temporel  
-q_remaining : volume restant à exécuter (discrétisé)
+Cet état permet à l’agent de prendre des décisions en tenant compte à la fois du temps écoulé et du volume restant.
 
-## Actions
+Actions
 
-a_t = fraction du volume maximum autorisé à l’instant t :
+L’action correspond à la fraction du volume maximum autorisé à l’instant $t$ :
 
-a_t ∈ {0, 0.25, 0.5, 0.75, 1.0} · cap_t
+$$
+a_t \in {0, 0.25, 0.5, 0.75, 1.0} \cdot cap_t
+$$
 
-## Récompense
+où $cap_t$ est la limite de participation maximale pour éviter un impact de marché trop important.
 
-r_t = − [ λ_impact · a_t² + λ_track · (a_t − x_tᵛʷᵃᵖ)² ]
+Récompense
 
-Une pénalité terminale est ajoutée si le volume total n’est pas exécuté en fin d’épisode.
+La récompense $r_t$ combine deux composantes : l’impact de marché et le tracking error par rapport au VWAP :
 
-## Algorithme
+$$
+r_t = - \left( \lambda_{impact} a_t^2 + \lambda_{track} (a_t - x_t^{VWAP})^2 \right)
+$$
+	•	$\lambda_{impact}$ : pondération de l’impact de marché (favorise l’exécution douce)
+	•	$\lambda_{track}$ : pondération du suivi du VWAP
 
-Q-learning tabulaire avec politique ε-greedy :
+Une pénalité terminale est ajoutée si le volume total n’est pas exécuté en fin d’épisode, encourageant l’agent à terminer l’ordre.
 
-Q(s, a) ← (1 − α) Q(s, a) + α [ r + γ maxₐ Q(s', a) ]
+Algorithme
 
-## Sortie
+L’apprentissage utilise Q-learning tabulaire avec une politique $\epsilon$-greedy :
 
-Une politique d’exécution apprise, testée en rollout greedy.
+$$
+Q(s, a) \leftarrow (1 - \alpha) Q(s, a) + \alpha \left[ r + \gamma \max_{a’} Q(s’, a’) \right]
+$$
+	•	$\alpha$ : taux d’apprentissage
+	•	$\gamma$ : facteur de discount
+	•	$\epsilon$ : probabilité de choisir une action aléatoire pour explorer l’espace d’actions
+
+Sortie
+
+Le résultat est une politique d’exécution apprise, testée via des rollouts en mode greedy, qui indique la fraction optimale du volume à exécuter à chaque tranche temporelle, en minimisant à la fois l’impact de marché et le tracking error.
