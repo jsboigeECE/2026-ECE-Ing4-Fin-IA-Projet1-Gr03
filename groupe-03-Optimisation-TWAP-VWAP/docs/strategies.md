@@ -6,13 +6,15 @@ Ce projet implémente quatre stratégies d’exécution d’ordres : TWAP, VWAP,
 
 ## 1. TWAP (Time-Weighted Average Price)
 
-**Principe**
-Le volume total à exécuter est réparti uniformément dans le temps.
+**Principe**  
+Le volume total à exécuter est réparti uniformément dans le temps. TWAP constitue une baseline simple et utile pour comparaison avec des stratégies plus sophistiquées.
 
-**Formule**
+**Formule**  
 Pour un volume total (Q) et (N) tranches :
 
+$$
 x_t = Q / N
+$$
 
 (arrondi à l’entier et ajusté pour sommer exactement à (Q))
 
@@ -29,17 +31,21 @@ x_t = Q / N
 
 ## 2. VWAP (Volume-Weighted Average Price)
 
-**Principe**
-Le volume est réparti proportionnellement au volume de marché observé.
+**Principe**  
+Le volume est réparti proportionnellement au volume de marché observé ou historique, ce qui permet de tenir compte de la liquidité réelle du marché.
 
-**Formule**
+**Formule**  
 Pour des volumes de marché (V_t) :
 
-x_t = Q · V_t / (∑_t V_t)
+$$
+x_t = Q \cdot \frac{V_t}{\sum_t V_t}
+$$
 
 Une contrainte de participation limite l’exécution :
 
-x_t ≤ α · V_t
+$$
+x_t \leq \alpha \cdot V_t
+$$
 
 avec (\alpha) le taux de participation.
 
@@ -55,20 +61,25 @@ avec (\alpha) le taux de participation.
 
 ## 3. Optimisation sous contraintes (CP-SAT)
 
-**Principe**
-Formuler l’exécution comme un problème d’optimisation sous contraintes.
+**Principe**  
+Formuler l’exécution comme un problème d’optimisation sous contraintes permet de minimiser l’impact de marché tout en respectant les contraintes imposées.
 
 **Contraintes principales**
 
-* Conservation du volume :
-  ∑_t x_t = Q
-* Bornes par tranche :
-  0 ≤ x_t ≤ α · V_t
+$$
+\sum_t x_t = Q
+$$
 
-**Fonction objectif**
+$$
+0 \leq x_t \leq \alpha \cdot V_t
+$$
+
+**Fonction objectif**  
 Minimisation d’un compromis entre impact et tracking VWAP :
 
-Minimiser : ∑_t [ λ_impact · x_t² + λ_track · (x_t − x_t_VWAP)² ]
+$$
+\min \sum_t \left( \lambda_{\text{impact}} x_t^2 + \lambda_{\text{track}} (x_t - x_t^{\text{VWAP}})^2 \right)
+$$
 
 **Avantages**
 
@@ -83,18 +94,20 @@ Minimiser : ∑_t [ λ_impact · x_t² + λ_track · (x_t − x_t_VWAP)² ]
 
 ## 4. Reinforcement Learning (Q-learning)
 
-**Principe**
-Un agent apprend une politique d’exécution par interaction avec un environnement simulé.
+**Principe**  
+Un agent apprend une politique d’exécution par interaction avec un environnement simulé. Cette approche est adaptative et apprend en ligne.
 
-**État**
+**État**  
 (t, q_remaining)
 
-**Action**
+**Action**  
 Fraction du volume maximal autorisé à l’instant (t).
 
 **Récompense**
 
-r_t = − [ λ_impact · x_t² + λ_track · (x_t − x_t_VWAP)² ]
+$$
+r_t = - \left( \lambda_{\text{impact}} x_t^2 + \lambda_{\text{track}} (x_t - x_t^{\text{VWAP}})^2 \right)
+$$
 
 Pénalité terminale si (Q) n’est pas entièrement exécuté.
 
