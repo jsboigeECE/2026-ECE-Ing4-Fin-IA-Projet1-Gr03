@@ -4,6 +4,27 @@ Ce projet implémente quatre stratégies d’exécution d’ordres : TWAP, VWAP,
 
 ---
 
+### Discrétisation temporelle
+
+L’horizon d’exécution est discrétisé en **N tranches temporelles** (time buckets).
+
+Pour chaque tranche :
+
+* une quantité de volume est exécutée
+* le volume de marché associé est connu (ou observé)
+
+Toutes les stratégies produisent en sortie un vecteur :
+
+```
+q = (q₁, q₂, …, qₙ)
+```
+
+avec la contrainte :
+
+```
+∑ qᵢ = Q_total
+```
+
 ## 1. TWAP (Time-Weighted Average Price)
 
 **Principe**  
