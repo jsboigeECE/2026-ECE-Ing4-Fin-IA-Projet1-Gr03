@@ -44,6 +44,7 @@ Ouvrir vers des approches basées sur l’apprentissage par renforcement, dans l
 
 ------------------------------------------------------------------------------------------
 ## 3. Architecture du projet
+```
 groupe-03-Optimisation-TWAP-VWAP/
 ├── README.md
 ├── src/
@@ -77,6 +78,7 @@ groupe-03-Optimisation-TWAP-VWAP/
 └── docs/
      └── documentation.pdf
 
+```
 ------------------------------------------------------------------------------------------
 ## 4. Installation
 Prérequis : 
