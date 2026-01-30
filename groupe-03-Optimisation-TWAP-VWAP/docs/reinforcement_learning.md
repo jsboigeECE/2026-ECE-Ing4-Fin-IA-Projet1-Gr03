@@ -60,3 +60,12 @@ $$
 ## Sortie
 
 Le résultat est une **politique d’exécution apprise**, testée via des rollouts en mode greedy, qui indique la fraction optimale du volume à exécuter à chaque tranche temporelle, en minimisant à la fois l’impact de marché et le tracking error.
+
+**Avantages**
+
+* Adaptatif
+* Approche en ligne
+
+**Limites**
+
+* Dépend de l’entraînement et des hyperparamètres

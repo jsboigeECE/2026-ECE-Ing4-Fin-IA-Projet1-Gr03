@@ -61,65 +61,79 @@ avec $\alpha$ le taux de participation.
 
 ## 3. Optimisation sous contraintes (CP-SAT)
 
-**Principe**  
-Formuler l’exécution comme un problème d’optimisation sous contraintes permet de minimiser l’impact de marché tout en respectant les contraintes imposées.
+Cette approche rend l’exécution d’un ordre comme un **problème d’optimisation sous contraintes**.  
+L’objectif principal est de répartir un **volume total à exécuter** sur plusieurs **tranches de temps**, tout en respectant les **limites de liquidité du marché** et en minimisant un **coût global** associé à l’exécution.
 
-**Contraintes principales**
+Le modèle est résolu à l’aide du **solveur CP-SAT de Google OR-Tools**, qui permet :
+- de gérer des **variables entières**,
+- d’imposer des **contraintes strictes**,
+- et de définir une **fonction objectif quadratique**.
+
+## Variables
+
+$$
+x_t \in \mathbb{N}^+ \quad \text{: volume exécuté à l’instant } t
+$$
+
+> Chaque tranche de temps \(t\) a un volume exécuté \(x_t\) qui doit être un entier positif.
+
+## Données
+
+- $Q$ : volume total à exécuter  
+- $V_t$ : volume de marché observé à l’instant \(t\)  
+- $\alpha$ : taux de participation maximal autorisé  
+
+> Ces données définissent la quantité totale à exécuter, la liquidité disponible à chaque tranche, et la limite de participation par tranche.
+
+## Contraintes
+
+1. **Somme des volumes exécutés égale au volume total :**
 
 $$
 \sum_t x_t = Q
 $$
 
-$$
-0 \leq x_t \leq \alpha \cdot V_t
-$$
+> Cette contrainte assure que tout le volume prévu est exécuté.
 
-**Fonction objectif**  
-Minimisation d’un compromis entre impact et tracking VWAP :
+2. **Borne de liquidité par tranche :**
 
 $$
-\min \sum_t \left( \lambda_{\text{impact}} x_t^2 + \lambda_{\text{track}} (x_t - x_t^{\text{VWAP}})^2 \right)
+0 \le x_t \le \alpha \cdot V_t
 $$
 
-**Avantages**
+> Cela garantit que l’ordre ne dépasse pas une fraction raisonnable du volume du marché à chaque instant, limitant l’impact sur le marché.
 
-* Flexible
-* Paramétrable
+## Cible VWAP
 
-**Limites**
-
-* Suppose une connaissance a posteriori des volumes
-
----
-
-## 4. Reinforcement Learning (Q-learning)
-
-**Principe**  
-Un agent apprend une politique d’exécution par interaction avec un environnement simulé. Cette approche est adaptative et apprend en ligne.
-
-**État**  
-(t, q_remaining)
-
-**Action**  
-Fraction du volume maximal autorisé à l’instant (t).
-
-**Récompense**
+Le **volume théorique à exécuter pour suivre le VWAP** est donné par :
 
 $$
-r_t = - \left( \lambda_{\text{impact}} x_t^2 + \lambda_{\text{track}} (x_t - x_t^{\text{VWAP}})^2 \right)
+x_t^{VWAP} = Q \cdot \frac{V_t}{\sum_k V_k}
 $$
 
-Pénalité terminale si (Q) n’est pas entièrement exécuté.
+> Cette cible répartit le volume proportionnellement à la liquidité observée, permettant de suivre le **benchmark VWAP**.
 
-**Avantages**
+## Fonction objectif
 
-* Adaptatif
-* Approche en ligne
+La fonction objectif cherche à **minimiser le coût global** en combinant deux composantes :
 
-**Limites**
+$$
+\min \sum_t \left[ \lambda_{\text{impact}} \cdot x_t^2 + \lambda_{\text{track}} \cdot (x_t - x_t^{VWAP})^2 \right]
+$$
 
-* Dépend de l’entraînement et des hyperparamètres
+- \(\lambda_{\text{impact}}\) : pondération de l’impact de marché (prévention des volumes trop concentrés)  
+- \(\lambda_{\text{track}}\) : pondération du suivi du benchmark VWAP  
 
----
+> La première partie pénalise les tranches trop importantes qui peuvent influencer le marché.  
+> La seconde partie assure que l’exécution reste proche du VWAP.
 
-Ces stratégies sont comparées sur les mêmes métriques afin d’analyser le compromis entre impact de marché et suivi du VWAP.
+## Sortie
+
+Un **planning d’exécution optimal** :
+
+$$
+(x_1, x_2, \dots, x_N)
+$$
+
+> Chaque \(x_t\) indique le volume à exécuter à l’instant \(t\) pour atteindre un compromis optimal entre impact de marché et suivi du benchmark.
+

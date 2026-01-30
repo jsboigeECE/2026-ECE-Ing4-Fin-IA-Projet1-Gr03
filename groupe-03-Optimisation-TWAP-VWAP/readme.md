@@ -73,7 +73,9 @@ groupe-03-Optimisation-TWAP-VWAP/
 ├── run_rl_test.py
 ├── rl_qtable.pkl            # généré par run_rl_train.py
 └── slides/
-    └── presentation.pdf
+│    └── presentation.pdf
+└── docs/
+     └── documentation.pdf
 
 ------------------------------------------------------------------------------------------
 ## 4. Installation
