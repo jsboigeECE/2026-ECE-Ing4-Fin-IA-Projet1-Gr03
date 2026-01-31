@@ -94,6 +94,8 @@ Installation des dépendances:
 ```
 python -m pip install --upgrade pip
 python -m pip install ortools pytest yfinance pandas matplotlib
+python -m pip install matplotlib
+
 ```
 
 Vérification:
@@ -109,6 +111,8 @@ Installation des dépendances:
 ```
 python3 -m pip install --upgrade pip
 python3 -m pip install ortools pytest yfinance pandas matplotlib
+python3 -m pip install matplotlib
+
 ```
 
 Vérification:
