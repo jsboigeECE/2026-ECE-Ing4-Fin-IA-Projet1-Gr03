@@ -379,12 +379,59 @@ class GraphBuilder:
     
     def export_to_gexf(self, filepath: str) -> None:
         """
-        Exporte le graphe au format GEXF.
+        Exporte le graphe au format GEXF avec gestion d'erreurs.
         
         Args:
             filepath: Chemin du fichier de sortie.
         """
-        nx.write_gexf(self.graph, filepath)
+        import os
+        
+        try:
+            # Créer une copie du graphe pour l'export
+            export_graph = self.graph.copy()
+            
+            # Convertir tous les attributs de nœuds en types compatibles GEXF
+            for node, data in export_graph.nodes(data=True):
+                for key, value in data.items():
+                    if key == "transactions":
+                        # Ignorer la liste de transactions (trop complexe pour GEXF)
+                        export_graph.nodes[node][key] = str(len(value))
+                    elif isinstance(value, bool):
+                        export_graph.nodes[node][key] = str(value)
+                    elif isinstance(value, (int, float)):
+                        export_graph.nodes[node][key] = float(value)
+                    elif isinstance(value, datetime):
+                        export_graph.nodes[node][key] = value.isoformat()
+                    elif value is None:
+                        export_graph.nodes[node][key] = ""
+                    else:
+                        export_graph.nodes[node][key] = str(value)
+            
+            # Convertir tous les attributs d'arêtes en types compatibles GEXF
+            for source, target, data in export_graph.edges(data=True):
+                for key, value in data.items():
+                    if key == "transactions":
+                        # Ignorer la liste de transactions (trop complexe pour GEXF)
+                        export_graph[source][target][key] = str(len(value))
+                    elif isinstance(value, bool):
+                        export_graph[source][target][key] = str(value)
+                    elif isinstance(value, (int, float)):
+                        export_graph[source][target][key] = float(value)
+                    elif isinstance(value, datetime):
+                        export_graph[source][target][key] = value.isoformat()
+                    elif value is None:
+                        export_graph[source][target][key] = ""
+                    else:
+                        export_graph[source][target][key] = str(value)
+            
+            # Écrire le fichier GEXF
+            nx.write_gexf(export_graph, filepath)
+            
+        except Exception as e:
+            # En cas d'erreur, supprimer le fichier corrompu s'il existe
+            if os.path.exists(filepath):
+                os.remove(filepath)
+            raise RuntimeError(f"Erreur lors de l'export GEXF : {e}")
     
     def export_to_graphml(self, filepath: str) -> None:
         """

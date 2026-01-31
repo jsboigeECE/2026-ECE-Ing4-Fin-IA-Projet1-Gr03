@@ -11,6 +11,11 @@ import networkx as nx
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from abc import ABC, abstractmethod
+import signal
+import logging
+import time
+
+logger = logging.getLogger(__name__)
 
 
 class BaseDetector(ABC):
@@ -97,6 +102,7 @@ class CycleDetector(BaseDetector):
         max_cycle_length (int): Longueur maximale des cycles à détecter.
         min_cycle_length (int): Longueur minimale des cycles à détecter.
         max_cycles (int): Nombre maximum de cycles à détecter.
+        timeout_seconds (int): Timeout en secondes pour la détection.
     
     Example:
         >>> detector = CycleDetector(max_cycle_length=5)
@@ -108,7 +114,8 @@ class CycleDetector(BaseDetector):
         self,
         max_cycle_length: int = 5,
         min_cycle_length: int = 3,
-        max_cycles: int = 50
+        max_cycles: int = 100,
+        timeout_seconds: int = 15
     ) -> None:
         """
         Initialise le détecteur de cycles.
@@ -117,10 +124,12 @@ class CycleDetector(BaseDetector):
             max_cycle_length: Longueur maximale des cycles à détecter.
             min_cycle_length: Longueur minimale des cycles à détecter.
             max_cycles: Nombre maximum de cycles à détecter.
+            timeout_seconds: Timeout en secondes pour la détection.
         """
         self.max_cycle_length = max_cycle_length
         self.min_cycle_length = min_cycle_length
         self.max_cycles = max_cycles
+        self.timeout_seconds = timeout_seconds
     
     def detect(self, graph: nx.DiGraph) -> List[Dict[str, Any]]:
         """
@@ -130,6 +139,9 @@ class CycleDetector(BaseDetector):
         qui ne peuvent pas faire partie d'un cycle (degré < 2),
         puis recherche les cycles élémentaires avec une longueur
         limitée pour éviter les blocages de calcul.
+        
+        Un chronomètre est utilisé pour arrêter la détection après
+        timeout_seconds et retourner les cycles déjà trouvés.
         
         Args:
             graph: Le graphe de transactions à analyser.
@@ -145,23 +157,50 @@ class CycleDetector(BaseDetector):
         filtered_graph = self._filter_graph(graph)
         
         if filtered_graph.number_of_nodes() < self.min_cycle_length:
+            logger.info(f"Graphe filtré trop petit ({filtered_graph.number_of_nodes()} nœuds)")
             return cycles
         
-        # Étape 2: Recherche des cycles avec limites
+        logger.info(f"Graphe filtré : {filtered_graph.number_of_nodes()} nœuds, {filtered_graph.number_of_edges()} arêtes")
+        
+        # Étape 2: Recherche des cycles avec limites et timeout
+        start_time = time.time()
+        timeout_reached = False
+        
         try:
             cycle_count = 0
             for cycle in nx.simple_cycles(filtered_graph):
+                # Vérifier le timeout
+                elapsed_time = time.time() - start_time
+                if elapsed_time > self.timeout_seconds:
+                    logger.warning(f"  Timeout atteint après {elapsed_time:.2f}s (limite: {self.timeout_seconds}s)")
+                    timeout_reached = True
+                    break
+                
                 # Vérifier la longueur minimale et maximale
                 if len(cycle) >= self.min_cycle_length and len(cycle) <= self.max_cycle_length:
                     cycle_alert = self._create_cycle_alert(cycle, graph)
                     cycles.append(cycle_alert)
                     cycle_count += 1
                     
+                    # Log de progression tous les 10 cycles
+                    if cycle_count % 10 == 0:
+                        elapsed = time.time() - start_time
+                        logger.info(f"  {cycle_count} cycles détectés... ({elapsed:.2f}s)")
+                    
                     # Arrêter si on a atteint la limite
                     if cycle_count >= self.max_cycles:
+                        logger.info(f"  Limite de {self.max_cycles} cycles atteinte")
                         break
-        except nx.NetworkXError:
-            pass
+        except nx.NetworkXError as e:
+            logger.warning(f"Erreur NetworkX lors de la détection de cycles : {e}")
+        except Exception as e:
+            logger.warning(f"Erreur lors de la détection de cycles : {e}")
+        
+        total_time = time.time() - start_time
+        if timeout_reached:
+            logger.warning(f"  Détection interrompue par timeout - {len(cycles)} cycles trouvés en {total_time:.2f}s")
+        else:
+            logger.info(f"  Total : {len(cycles)} cycles détectés en {total_time:.2f}s")
         
         return cycles
     
@@ -189,6 +228,7 @@ class CycleDetector(BaseDetector):
         
         if nodes_to_remove:
             filtered_graph.remove_nodes_from(nodes_to_remove)
+            logger.info(f"  {len(nodes_to_remove)} nœuds élagués (degré < 2)")
         
         return filtered_graph
     

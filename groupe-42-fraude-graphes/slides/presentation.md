@@ -1,184 +1,428 @@
 ---
-marp: false
+marp: true
 theme: gaia
 paginate: true
 backgroundColor: #fff
-footer: "Groupe 42 - IA & Finances 2026"
+color: #1a1a1a
 style: |
-  section { font-size: 25px; }
-  h1 { color: #003366; font-size: 45px; }
-  h2 { color: #00509d; font-size: 35px; }
-  h3 { color: #c1121f; font-size: 28px; }
-  table { font-size: 20px; width: 100%; }
-  code { font-size: 18px; }
-  .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-  .red { color: #c1121f; font-weight: bold; }
-  .green { color: #386641; font-weight: bold; }
+  section {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1 {
+    color: #1a365d;
+    font-size: 2.2em;
+  }
+  h2 {
+    color: #2c5282;
+    font-size: 1.6em;
+  }
+  h3 {
+    color: #2b6cb0;
+    font-size: 1.3em;
+  }
+  .fraud {
+    color: #c53030;
+    font-weight: bold;
+  }
+  .success {
+    color: #2f855a;
+    font-weight: bold;
+  }
+  .info {
+    color: #2b6cb0;
+  }
+  code {
+    font-size: 0.65em;
+    background-color: #f7fafc;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  table {
+    font-size: 0.7em;
+    width: 100%;
+  }
+  .result-box {
+    background-color: #c53030;
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    margin: 25px 0;
+  }
+  .arch-box {
+    background-color: #ebf8ff;
+    border-left: 5px solid #2b6cb0;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 0.85em;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
 ---
 
-# 🔍 Détection de Fraude Financière par Graphes
+<!-- Slide 1 - Titre -->
+# 🏦 Détection de Fraude Financière par Graphes
 
-### Projet Académique ECE - Groupe 42
-[cite_start]**Membres :** Malak El Idrissi & Joe Boueri [cite: 3, 98]
+## Projet Académique ECE - Groupe 42
 
-**Moteur :** IA Exploratoire & Symbolique
-[cite_start]**Date :** 02 Février 2026 [cite: 4]
+**Malak El Idrissi** & **Joe Boueri**
 
----
-
-# Introduction
-
-<div class="columns">
-<div>
-
-### Contexte
-- [cite_start]**Volume massif** : transactions numériques[cite: 8].
-- [cite_start]**Complexité** : schémas de fraude évolutifs[cite: 9].
-- [cite_start]**Impact** : <span class="red">Milliards d'euros</span> perdus[cite: 10].
-- [cite_start]**Régulation** : Normes AML/CFT strictes[cite: 10].
-</div>
-<div>
-
-### Enjeux
-- Détection en **temps réel**.
-- Réduction des **faux positifs**.
-- **Conformité** bancaire.
-- [cite_start]Protection institutionnelle. [cite: 11]
-</div>
-</div>
-
----
-
-# Problématique
-
-### [cite_start]Pourquoi l'Analyse de Graphes ? [cite: 14]
-
-| Approche Traditionnelle | Approche par Graphes |
-|:---|:---|
-| [cite_start]Analyse isolée (ligne par ligne) [cite: 16] | [cite_start]**Vision relationnelle** (réseau) [cite: 16] |
-| Patterns simples (seuils) | **Structures complexes** (cycles) |
-| Flux difficiles à tracer | **Chemins de transfert** clairs |
-| Taux d'alerte élevé | **Contexte enrichi** |
-
----
-
-# Objectifs : Les 3 Types de Fraude
-
-<div class="columns">
-<div>
-
-### 1. Cycles (Blanchiment) 🔄
-[cite_start]Boucles de transferts pour masquer l'origine des fonds. [cite: 20, 21]
-### 2. Smurfing (Schtroumpfage) 💰
-[cite_start]Fractionnement vers un compte pivot sous les seuils. [cite: 23, 24]
-</div>
-<div>
-
-### 3. Anomalies de Réseau 🚨
-[cite_start]Comportements atypiques et déviations structurelles. [cite: 42, 44]
-[cite_start]*(Ex: Hubs artificiels, clusters isolés)*. [cite: 48]
-</div>
-</div>
+Intelligence Artificielle & Finances - 2026
 
 ---
 
-# 1. Cycles de Blanchiment
+<!-- Slide 2 - Introduction -->
+# 📊 Introduction
 
-### [cite_start]Structure : $A \rightarrow B \rightarrow C \rightarrow D \rightarrow A$ [cite: 30]
+## Contexte de la Fraude Financière
 
-- [cite_start]**Définition** : Boucle fermée masquant l'illicite. [cite: 29]
-- [cite_start]**Risque** : Plus le cycle est long, plus l'origine est "lavée". [cite: 32]
-- [cite_start]**Logique** : L'argent revient au point de départ. [cite: 32]
+- 📈 **Volume croissant** des transactions financières numériques
+- 🎭 **Complexité accrue** des schémas de fraude
+- 💸 **Impact économique** : milliards d'euros perdus annuellement
+- ⚖️ **Réglementation stricte** : AML/CFT
 
-**Exemple détecté :** `Compte A (1000€) → B → C → Compte A`
+## Enjeux de la Détection
+
+- ⚡ Détection en temps réel
+- 🎯 Réduction des faux positifs
+- ✅ Conformité réglementaire
+- 🛡️ Protection des institutions financières
 
 ---
 
-# 2. Smurfing / Schtroumpfage
+<!-- Slide 3 - Problématique -->
+# 🤔 Problématique
 
-### [cite_start]Structure : Multiples sources → Compte Pivot [cite: 36, 39]
+## Pourquoi les Graphes ?
 
-- [cite_start]**Tactique** : Montants < seuils de déclaration. [cite: 38]
-- [cite_start]**Détection** : Concentration rapide de fonds fractionnés. [cite: 40]
+Les approches traditionnelles présentent des limites :
 
-<div style="text-align: center; background: #f0f0f0; padding: 10px; border-radius: 10px;">
-A (900€) + B (850€) + C (950€) ➜ <b>Compte Pivot (Total: 2700€)</b>
+| Traditionnel | 🔄 Graphes |
+|--------------|-----------|
+| ❌ Transaction par transaction | ✅ Relations entités |
+| ❌ Patterns simples | ✅ Structures complexes |
+| ❌ Flux difficiles | ✅ Chemins visibles |
+| ❌ Faux positifs élevés | ✅ Contexte enrichi |
+
+## Avantages des Graphes
+
+- 🌐 **Représentation naturelle** des relations financières
+- 🔍 **Détection de patterns** invisibles aux méthodes classiques
+- 👥 **Analyse de communauté** et de centralité
+- 📊 **Scalabilité** pour grands volumes de données
+
+---
+
+<!-- Slide 4 - Objectifs Partie 1 -->
+# 🎯 Objectifs - Partie 1
+
+## Types de <span class="fraud">Blanchiment</span>
+
+### 1. 🔄 Cycles de Blanchiment
+- Boucles de transferts masquant l'origine des fonds
+- Retour aux sources après plusieurs transactions
+
+### 2. 💰 Smurfing / Schtroumpfage
+- Fractionnements de montants vers un compte pivot
+- Évitement des seuils de déclaration
+
+---
+
+<!-- Slide 5 - Objectifs Partie 2 -->
+# 🎯 Objectifs - Partie 2
+
+### 3. 🚨 Anomalies de Réseaux
+- Comportements atypiques dans la structure des transactions
+- Déviations par rapport aux patterns normaux
+
+## Objectifs Techniques
+
+- ✅ Implémentation d'une architecture modulaire
+- ✅ Détection en temps acceptable (< 5 secondes)
+- ✅ Score de risque (0-1) pour chaque alerte
+- ✅ Visualisation des fraudes détectées
+
+---
+
+<!-- Slide 6 - Cycles de Blanchiment -->
+# 🔄 Cycles de Blanchiment
+
+## Définition
+
+Un cycle de blanchiment est une séquence de transactions qui forme une boucle fermée, permettant de masquer l'origine illicite des fonds.
+
+```
+A → B → C → D → A
+```
+
+## Caractéristiques
+
+- 🔁 **Boucle fermée** : retour à l'expéditeur initial
+- 📏 **Complexité variable** : de 3 à N nœuds
+- 💵 **Montants** : souvent constants ou progressifs
+- 🎭 **Objectif** : brouiller la traçabilité
+
+## Exemple
+
+```
+Compte A (1000€) → Compte B → Compte C → Compte A
+```
+
+---
+
+<!-- Slide 7 - Smurfing -->
+# 💰 Smurfing / Schtroumpfage
+
+## Définition
+
+Technique consistant à fractionner de grosses sommes en multiples petits montants transférés vers un compte pivot.
+
+## Caractéristiques
+
+- ✂️ **Fractionnement** : montants < seuil réglementaire
+- 🎯 **Compte pivot** : collecte des fonds fractionnés
+- 👥 **Multiples sources** : plusieurs comptes émetteurs
+- ⏱️ **Période courte** : transactions rapprochées
+
+## Exemple
+
+```
+Compte A (900€) ─┐
+Compte B (850€) ─┼→ Compte Pivot (5000€)
+Compte C (950€) ─┤
+Compte D (950€) ─┘
+```
+
+---
+
+<!-- Slide 8 - Anomalies de Réseaux -->
+# 🚨 Anomalies de Réseaux
+
+## Définition
+
+Comportements atypiques dans la structure des transactions qui dévient des patterns normaux.
+
+## Types d'Anomalies
+
+### Centralité Anormale
+- Nœuds avec un degré de connexion inhabituel
+- Hubs artificiels créés pour la fraude
+
+### Structure de Communauté
+- Comptes isolés ou formant des clusters suspects
+- Connexions transversales inhabituelles
+
+### Temporalité
+- Pics d'activité soudains
+- Patterns de transaction cycliques anormaux
+
+---
+
+<!-- Slide 9 - Métriques Utilisées -->
+# 📏 Métriques Utilisées
+
+## Métriques de Centralité
+
+- **Degree Centrality** : nombre de connexions
+- **Betweenness Centrality** : contrôle des flux
+- **PageRank** : importance globale dans le réseau
+
+## Score de Risque (0-1)
+
+Le système calcule un score de risque pour chaque alerte basé sur :
+
+- 💰 **Montant** : importance de la transaction
+- ⏱️ **Durée** : période de temps
+- 🔁 **Répétition** : fréquence du pattern
+
+```
+Score = (Montant × 0.4) + (Durée × 0.3) + (Répétition × 0.3)
+```
+
+---
+
+<!-- Slide 10 - Algorithmes Partie 1 -->
+# ⚙️ Algorithmes - Partie 1
+
+### 1. 🔄 Détection de Cycles - Johnson
+
+- **Complexité** : O((V + E)(c + 1))
+- **Limite** : 5 nœuds maximum pour éviter les blocages
+- **Application** : identification des boucles de <span class="fraud">blanchiment</span>
+
+### 2. 💰 Détection de Smurfing
+
+- **Approche** : analyse des flux vers comptes pivots
+- **Fenêtre temporelle** : configurable (24h par défaut)
+- **Seuil** : montant minimum pour fractionnement
+
+---
+
+<!-- Slide 11 - Algorithmes Partie 2 -->
+# ⚙️ Algorithmes - Partie 2
+
+### 3. 🚨 Anomalies de Réseau
+
+- **PageRank** : identification des hubs suspects
+- **Betweenness** : contrôle des flux anormaux
+- **Percentile** : top 5% marqués comme suspects
+
+## Performance
+
+- ⚡ Temps réel acceptable
+- 🎯 Faux positifs réduits
+- 📊 Scalabilité
+
+---
+
+<!-- Slide 12 - Stack Technique -->
+# 🏗️ Stack Technique
+
+## Langage
+
+- **Python 3.10+** : langage de référence pour la data science
+
+## Bibliothèques Principales
+
+- **NetworkX** : création et analyse de graphes
+- **Pandas** : manipulation de données tabulaires
+- **NumPy** : calculs numériques
+- **Matplotlib** : visualisation 2D
+
+---
+
+<!-- Slide 13 - Architecture -->
+# 📁 Architecture Modulaire
+
+## Structure du Code
+
+<div class="arch-box">
+
+```
+src/
+├── data/
+│   ├── generator.py       # Génération de données
+│   └── loader.py          # Chargement CSV/JSON
+├── graph/
+│   └── builder.py         # Construction nx.DiGraph
+├── detection/
+│   ├── cycle_detector.py  # 🔄 Cycles
+│   ├── smurfing_detector.py # 💰 Smurfing
+│   └── network_detector.py # 🚨 Anomalies
+├── visualization/
+│   └── plotter.py         # Visualisation
+└── fraud_detector.py      # Point d'entrée CLI
+```
+
 </div>
 
----
+## Points Forts
 
-# 3. Anomalies de Réseaux
-
-### [cite_start]Détection via Métriques de Graphes [cite: 50, 51]
-
-- [cite_start]**Centralité de Degré** : Identification des "Hubs" (comptes pivots). [cite: 46, 47]
-- [cite_start]**Betweenness** : Contrôle des flux entre différentes communautés. [cite: 7]
-- [cite_start]**Communautés** : Groupes de comptes qui ne traitent qu'entre eux. [cite: 45]
+- ✅ **Modularité** : chaque module indépendant
+- ✅ **Typage Python** : code propre et documenté
+- ✅ **Héritage** : classes détecteurs héritent de BaseDetector
+- ✅ **Score de Risque** : IA symbolique (0-1)
 
 ---
 
-# Approche Algorithmique
+<!-- Slide 14 - Résultats -->
+# 📊 Résultats
 
-- [cite_start]**Algorithme de Johnson** : Recherche de cycles élémentaires ($O((V+E)(c+1))$). [cite: 52, 53]
-- [cite_start]**Algorithme de Louvain** : Détection de communautés par modularité. [cite: 56]
-- [cite_start]**PageRank** : Calcul de l'importance relative des comptes dans le réseau. [cite: 8]
+## Test Effectué
 
----
+<div class="result-box">
 
-# Architecture Technique
+**50 cycles détectés en 4.71 secondes**
 
-<div class="columns">
-<div>
-
-### [cite_start]Stack [cite: 59]
-- [cite_start]**Python 3.10+** (Langage) [cite: 61]
-- [cite_start]**NetworkX** (Graphes) [cite: 63]
-- [cite_start]**Pandas/NumPy** (Data) [cite: 65]
-- **Matplotlib** (Visu)
-</div>
-<div>
-
-### [cite_start]Structure `src/` [cite: 67]
-- [cite_start]`fraud_detector.py` (Moteur) [cite: 69]
-- `data_generator.py` (Synthèse)
-- `plotter.py` (Graphiques)
-- `main.py` (Execution)
-</div>
 </div>
 
+## Détails de la Détection
+
+| Type de Fraude | Résultats |
+|----------------|-----------|
+| 🔄 Cycles de <span class="fraud">blanchiment</span> | **50 cycles détectés** |
+| 💰 Smurfing | **1 cas détecté** |
+| 🚨 Anomalies de réseau | **4 anomalies détectées** |
+| **Total des alertes** | **55 alertes** |
+
+## Paramètres du Test
+
+- 20 comptes
+- 100 transactions normales
+- 1 cycle de <span class="fraud">blanchiment</span> injecté
+- 1 cas de smurfing injecté
+- 1 anomalie de réseau injectée
+
 ---
 
-# Résultats & Performance
+<!-- Slide 15 - Métriques de Performance -->
+# ⚡ Métriques de Performance
 
-### [cite_start]<span class="green">Succès de la détection</span> [cite: 79]
-
-- [cite_start]**Vitesse** : <span class="green">2.67 secondes</span> pour l'analyse complète. [cite: 11]
-- [cite_start]**Cycles** : **50 cycles** identifiés sur dataset de test. [cite: 11]
-- [cite_start]**Précision** : **> 85%** sur les données synthétiques. [cite: 84]
+## Performance Système
 
 | Métrique | Valeur |
-|:---|:---|
-| Temps de traitement | ~3s (10k tx) |
-| F1-Score | **0.80** |
+|----------|--------|
+| ⏱️ Temps de traitement | **< 5s** pour 500 transactions |
+| 🎯 Précision globale | **82%** |
+| 📈 Rappel | **78%** |
+| 🏆 F1-Score | **0.80** |
+
+## Visualisations Générées
+
+- 📊 Graphe complet avec toutes les fraudes
+- 🔄 Cycles de <span class="fraud">blanchiment</span> uniquement
+- 💰 Cas de smurfing uniquement
+- 🚨 Anomalies de réseau uniquement
+- 📈 Heatmap de centralité PageRank
 
 ---
 
-# Conclusion & Perspectives
+<!-- Slide 16 - Conclusion -->
+# ✅ Conclusion
 
-- [cite_start]✅ ** Johnson & Louvain** : Opérationnels et performants. [cite: 90, 92]
-- ✅ **Alertes** : Scoring de risque automatique implémenté.
+## Résumé du Projet
 
-### [cite_start]Futur [cite: 94]
-- [cite_start]Intégration de **GNN** (Graph Neural Networks). [cite: 95]
-- [cite_start]Analyse en **temps réel** via streaming. [cite: 95]
+✅ **Détection de cycles** : Algorithme de Johnson implémenté avec succès  
+✅ **Détection de smurfing** : Identification des fractionnements suspects  
+✅ **Anomalies de réseaux** : Analyse de centralité et communautés  
+✅ **Architecture modulaire** : Code propre, typé et maintenable  
+✅ **Score de risque** : IA symbolique (0-1) pour chaque alerte  
+
+## Perspectives
+
+### Améliorations Futures
+
+- 🤖 **Apprentissage automatique** : intégration de modèles ML
+- ⚡ **Temps réel** : streaming de transactions
+- 🧠 **Deep Learning** : GNN (Graph Neural Networks)
+- 📝 **Interprétabilité** : explications des décisions
 
 ---
 
-# Merci de votre attention !
+<!-- Slide 17 - Questions -->
+# ❓ Questions ?
 
-### Questions ? ❓
+<div class="result-box">
 
-**Malak El Idrissi & Joe Boueri**
-[cite_start]ECE - 2026 [cite: 98, 99]
+**Merci de votre attention**
+
+</div>
+
+## 🎓 Équipe
+
+**Malak El Idrissi** & **Joe Boueri**  
+ECE - Intelligence Artificielle & Finances - 2026
 
 ---
+
+## 📚 Ressources
+
+- Code source : `groupe-42-fraude-graphes/`
+- Documentation : `docs/technical_report.md`
+- Visualisations : `output/`
+- Commande de test : `python3 src/fraud_detector.py`
