@@ -56,6 +56,8 @@ class ExecutionEnv:
 
         self.q_bin = int(q_bin)
         self.action_fracs = action_fracs if action_fracs is not None else [0.0, 0.25, 0.5, 0.75, 1.0]
+        
+
 
         self.target = vwap_target(self.Q, self.volumes)
 
