@@ -84,9 +84,9 @@ def plot_results(twap, vwap, opt, target, symbol):
 
 
 def main():
-    symbol = "AAPL"      # change ici: "TSLA", "MSFT", "AIR.PA"
-    Q = 20000            # volume total à exécuter
-    last_n = 10          # nombre de minutes/barres utilisées = N
+    symbol = "TSLA"      # change ici: "TSLA", "MSFT", "AIR.PA"
+    Q = 3000            # volume total à exécuter
+    last_n = 20          # nombre de minutes/barres utilisées = N
 
     print("\n--------------------------------------------------------------------------")
     print(f"Downloading {symbol} data from yfinance...")
