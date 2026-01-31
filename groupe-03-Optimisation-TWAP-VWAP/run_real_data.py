@@ -4,6 +4,7 @@ from src.strategies.vwap import vwap_schedule
 from src.strategies.constrained_opt_cp import constrained_opt_cp_schedule
 
 
+
 def main():
     symbol = "AAPL"      # <- change ici (ex: "TSLA", "MSFT", "AIR.PA" pour Air Liquide)
     Q = 20000              # <- volume total à exécuter

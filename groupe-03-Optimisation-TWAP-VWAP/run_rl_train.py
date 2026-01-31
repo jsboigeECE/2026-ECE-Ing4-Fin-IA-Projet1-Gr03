@@ -17,7 +17,7 @@ def main():
         q_bin=5,
     )
 
-    Q_table = qlearning_train(env, episodes=4000)
+    Q_table = qlearning_train(env, episodes=10000)
 
     with open("rl_qtable.pkl", "wb") as f:
         pickle.dump(Q_table, f)
