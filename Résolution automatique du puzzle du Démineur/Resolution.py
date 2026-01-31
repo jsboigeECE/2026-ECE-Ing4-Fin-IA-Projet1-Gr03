@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # Cette fonction permet d'avoir un plateau de jeu comme le joueur voit
 def plateau(demineur, mask, taille):
     plat = np.zeros(demineur.shape, dtype=int)
@@ -11,10 +12,12 @@ def plateau(demineur, mask, taille):
                 plat[x][y] = demineur[x][y]
     return plat
 
+
 def case_decouverte(plat, x, y):
     if plat[x][y] == -1:
         return 0
     return 1
+
 
 def bordure(plat, taille):
     for i in range(taille):
@@ -23,32 +26,33 @@ def bordure(plat, taille):
                 # Ligne du dessus
                 if i != 0:
                     if j != 0:
-                        if not case_decouverte(plat, i-1, j-1):
-                            plat[i-1][j-1] = -2
+                        if not case_decouverte(plat, i - 1, j - 1):
+                            plat[i - 1][j - 1] = -2
                     if not case_decouverte(plat, i - 1, j):
-                        plat[i-1][j] = -2
+                        plat[i - 1][j] = -2
                     if j != taille - 1:
                         if not case_decouverte(plat, i - 1, j + 1):
-                            plat[i-1][j+1] = -2
+                            plat[i - 1][j + 1] = -2
                 # Même ligne
                 if j != 0:
                     if not case_decouverte(plat, i, j - 1):
-                        plat[i][j-1] = -2
+                        plat[i][j - 1] = -2
                 if j != taille - 1:
                     if not case_decouverte(plat, i, j + 1):
-                        plat[i][j+1] = -2
+                        plat[i][j + 1] = -2
                 # Ligne du dessous
                 if i != taille - 1:
                     if j != 0:
                         if not case_decouverte(plat, i + 1, j - 1):
-                            plat[i+1][j-1] = -2
+                            plat[i + 1][j - 1] = -2
                     if not case_decouverte(plat, i + 1, j):
-                        plat[i+1][j] = -2
+                        plat[i + 1][j] = -2
                     if j != taille - 1:
                         if not case_decouverte(plat, i + 1, j + 1):
-                            plat[i+1][j+1] = -2
+                            plat[i + 1][j + 1] = -2
 
     return plat
+
 
 def liste_bordure(plat):
     variables = []
@@ -58,6 +62,7 @@ def liste_bordure(plat):
                 variables.append((i, j))
     return variables
 
+
 def voisins(x, y, taille):
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
@@ -66,6 +71,7 @@ def voisins(x, y, taille):
             nx, ny = x + dx, y + dy
             if 0 <= nx < taille and 0 <= ny < taille:
                 yield nx, ny
+
 
 def contraintes(plat):
     taille = len(plat)
@@ -83,6 +89,7 @@ def contraintes(plat):
                     contraintes.append((inconnues, plat[i][j]))
 
     return contraintes
+
 
 def contraintes_valides(contraintes, assignation):
     for cases, total in contraintes:
@@ -102,6 +109,7 @@ def contraintes_valides(contraintes, assignation):
 
     return True
 
+
 def backtracking(variables, contraintes, assignation, stats):
     if len(assignation) == len(variables):
         stats["total"] += 1
@@ -117,6 +125,7 @@ def backtracking(variables, contraintes, assignation, stats):
         if contraintes_valides(contraintes, assignation):
             backtracking(variables, contraintes, assignation, stats)
         del assignation[v]
+
 
 def probabilites(plat):
     variables = liste_bordure(plat)
@@ -134,6 +143,7 @@ def probabilites(plat):
         probs[v] = stats["mines"][v] / stats["total"]
 
     return probs
+
 
 def meilleure_case(probs):
     for c, p in probs.items():
