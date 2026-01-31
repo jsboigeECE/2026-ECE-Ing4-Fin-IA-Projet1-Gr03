@@ -110,12 +110,34 @@ pip install networkx pandas numpy matplotlib
 
 ## Utilisation
 
+> **⚠️ Important :** Toutes les commandes ci-dessous doivent être exécutées depuis la racine du dossier `groupe-42-fraude-graphes`.
+
 ### Interface en Ligne de Commande (CLI)
 
 Le projet fournit une interface CLI complète via le module [`fraud_detector.py`](src/fraud_detector.py):
 
 > **⚠️ Important sur macOS :** Sur macOS, utilisez `python3` au lieu de `python` pour exécuter les commandes.
 
+#### Exemples d'Utilisation
+
+**Génération de base :**
+```bash
+python3 -m src.fraud_detector --accounts 20 --normal 100 --cycles 1 --smurfing 1 --anomalies 1 --viz-output output/test_graph.png --verbose
+```
+
+**Analyse de fichiers CSV :**
+```bash
+# Petit dataset
+python3 -m src.fraud_detector --input data/synthetic/small_dataset.csv --viz-output output/small_test.png --verbose
+
+# Dataset moyen
+python3 -m src.fraud_detector --input data/synthetic/medium_dataset.csv --viz-output output/medium_test.png --verbose
+
+# Grand dataset
+python3 -m src.fraud_detector --input data/synthetic/large_dataset.csv --viz-output output/large_test.png --verbose
+```
+
+**Autres options :**
 ```bash
 # Exécution avec paramètres par défaut
 python3 -m src.fraud_detector
@@ -134,9 +156,6 @@ python3 -m src.fraud_detector --verbose
 
 # Aide
 python3 -m src.fraud_detector --help
-
-# Chargement d'un fichier CSV existant
-python3 -m src.fraud_detector --input data/synthetic/small_dataset.csv --viz-output output/test.png --verbose
 ```
 
 #### Arguments CLI
