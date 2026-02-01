@@ -18,7 +18,7 @@ def cmd_backtest(args):
     from experiments.run_backtest import main as backtest_main
     
     # Override sys.argv for backtest
-    sys.argv = ['run_backtest.py'] + args.strategies
+    sys.argv = ['run_backtest.py', '--strategies'] + args.strategies
     if args.seed:
         sys.argv.extend(['--seed', str(args.seed)])
     if args.n_runs:

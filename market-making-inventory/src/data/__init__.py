@@ -14,11 +14,22 @@ from .simulator import (
     create_default_simulator
 )
 
+from .lob_loader import (
+    LOBDataLoader,
+    LOBDataConfig,
+    create_lobster_loader,
+    create_binance_loader
+)
+
 __all__ = [
     'MarketMakingSimulator',
     'LimitOrderBook',
     'SimulatorParameters',
     'Trade',
     'OrderSide',
-    'create_default_simulator'
+    'create_default_simulator',
+    'LOBDataLoader',
+    'LOBDataConfig',
+    'create_lobster_loader',
+    'create_binance_loader'
 ]

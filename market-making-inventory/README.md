@@ -33,6 +33,7 @@ This project implements scientifically rigorous solutions to this problem, inclu
 - **Finite difference and policy iteration solvers**
 - **Constraint Satisfaction Problem (CSP) formulation** using OR-Tools
 - **Reinforcement Learning environment** compatible with Gymnasium
+- **Real LOB data support** (LOBSTER, Binance) for RL training
 - **Comprehensive backtesting framework**
 
 ---
@@ -136,7 +137,9 @@ market-making-inventory/
 | [`FiniteDifferenceSolver`](src/solvers/hjb_solver.py) | Numerical HJB solver using finite differences |
 | [`CSPMarketMakingSolver`](src/solvers/csp_solver.py) | Constraint-based solver using OR-Tools |
 | [`MarketMakingSimulator`](src/data/simulator.py) | Market simulation with order book dynamics |
-| [`MarketMakingEnv`](src/rl_env/market_making_env.py) | Gymnasium environment for RL |
+| [`MarketMakingEnv`](src/rl_env/market_making_env.py) | Gymnasium environment for RL (simulated data) |
+| [`LOBMarketMakingEnv`](src/rl_env/lob_market_making_env.py) | Gymnasium environment for RL (real LOB data) |
+| [`LOBDataLoader`](src/data/lob_loader.py) | LOB data loader (LOBSTER, Binance) |
 
 ---
 
@@ -149,6 +152,7 @@ market-making-inventory/
 - Matplotlib
 - OR-Tools
 - Gymnasium (optional, for RL)
+- stable-baselines3 (optional, for RL training)
 
 ### Install from Source
 
@@ -172,8 +176,19 @@ pip install -e .
 
 ```bash
 pip install -r requirements.txt
-pip install stable-baselines3
+pip install stable-baselines3 gymnasium shimmy
 ```
+
+### Install with Real LOB Data Support
+
+For training with real LOB data (LOBSTER or Binance):
+
+```bash
+pip install -r requirements.txt
+pip install stable-baselines3 gymnasium shimpy
+```
+
+See [`docs/rl_lob_usage.md`](docs/rl_lob_usage.md) for detailed instructions on using real LOB data.
 
 ---
 
@@ -192,6 +207,18 @@ python cli.py simulate --seed 42 --strategy hjb
 
 # Train an RL agent (requires stable-baselines3)
 python cli.py train --timesteps 100000 --algorithm ppo
+
+# Train RL agent with real LOB data
+python experiments/train_rl_lob.py --source lobster \
+    --message-file data/AAPL_message.csv \
+    --orderbook-file data/AAPL_orderbook.csv \
+    --timesteps 100000
+
+# Train RL agent with Binance data
+python experiments/train_rl_lob.py --source binance \
+    --data-path data/binance/ \
+    --symbol BTCUSDT \
+    --timesteps 100000
 ```
 
 ### Python API
