@@ -1,4 +1,4 @@
-# Market Making Inventory
+# Market Making
 
 A scientifically rigorous implementation of **Optimal Market Making with Inventory Risk**, based on the frameworks of **Avellaneda-Stoikov (2008)** and **Guéant et al. (2013)**.
 
