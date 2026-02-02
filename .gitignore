@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Fichier d'evaluation local (ne pas commiter)
+EVALUATION_PROJETS.md
+
+# Fichiers generes par les tests/executions
+*.pkl
+fraud_graph.png
+*.log
+output.txt
