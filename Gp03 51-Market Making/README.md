@@ -48,7 +48,7 @@ market-making/
 ### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/ErwanSi/2026-ECE-Ing4-Fin-IA-Projet1-Gr03.git
-cd 2026-ECE-Ing4-Fin-IA-Projet1-Gr03
+cd "Gp03 51-Market Making"
 ```
 
 ### Step 2: Create Virtual Environment
