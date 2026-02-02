@@ -97,4 +97,4 @@ The strategy performance is evaluated using:
 - **PnL**: $X_t + q_t S_t - X_0$ (Mark-to-Market PnL).
 - **Sharpe Ratio**: $\frac{E[\text{Returns}]}{\sqrt{\text{Var}[\text{Returns}]}}$.
 - **Max Drawdown**: Maximum peak-to-trough decline in PnL.
-- **Inventory Distribution**: Histogram of time spent at each inventory level $q$.
+- **Inventory Distribution**: Histogram of time spent at each inventory level $q$. 
